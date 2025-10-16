@@ -277,12 +277,15 @@ export const CarSelectionScreen = () => {
 
             <CurrentCarModel scale={currentCar.id === 'car2' ? 0.085 : 0.825} position={[0, -1, 0]} rotation={[0, Math.PI / 4, 0]} />
             <OrbitControls
-              enableZoom={false}
+              enableZoom={true}
               enablePan={false}
+              minDistance={3}
+              maxDistance={10}
               minPolarAngle={Math.PI / 3}
               maxPolarAngle={Math.PI / 2.5}
               autoRotate
               autoRotateSpeed={2}
+              zoomSpeed={0.5}
             />
           </Canvas>
 
