@@ -265,7 +265,7 @@ export const CarController = () => {
 
   return (
     <group ref={carRef} position={[position.x, position.y, position.z]} rotation={[0, rotation, 0]}>
-      <SelectedCarModel scale={0.085} castShadow receiveShadow />
+      <SelectedCarModel scale={0.885} castShadow receiveShadow />
 
       {/* Front headlights - positioned at front of car */}
       <spotLight
