@@ -264,9 +264,12 @@ export const CarController = () => {
     camera.lookAt(lookAtTarget);
   });
 
+  // Get car scale based on selected car (McLaren smaller)
+  const carScale = selectedCar === 'car2' ? 0.085 : 0.685;
+
   return (
     <group ref={carRef} position={[position.x, position.y, position.z]} rotation={[0, rotation, 0]}>
-      <SelectedCarModel scale={0.885} rotation={[0, Math.PI, 0]} castShadow receiveShadow />
+      <SelectedCarModel scale={carScale} rotation={[0, Math.PI, 0]} castShadow receiveShadow />
 
       {/* Front headlights - positioned at front of car */}
       <spotLight
