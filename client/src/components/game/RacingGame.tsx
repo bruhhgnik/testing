@@ -266,10 +266,12 @@ export const CarController = () => {
 
   // Get car scale based on selected car (McLaren smaller)
   const carScale = selectedCar === 'car2' ? 0.085 : 0.685;
+  // Rotate only McLaren by 180 degrees
+  const carRotation = selectedCar === 'car2' ? 0 : Math.PI;
 
   return (
     <group ref={carRef} position={[position.x, position.y, position.z]} rotation={[0, rotation, 0]}>
-      <SelectedCarModel scale={carScale} rotation={[0, Math.PI, 0]} castShadow receiveShadow />
+      <SelectedCarModel scale={carScale} rotation={[0, carRotation, 0]} castShadow receiveShadow />
 
       {/* Front headlights - positioned at front of car */}
       <spotLight
