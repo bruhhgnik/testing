@@ -133,11 +133,25 @@ export const CarSelectionScreen = () => {
           </button>
 
           <Canvas camera={{ position: [5, 2, 5], fov: 50 }}>
-            <ambientLight intensity={0.8} />
-            <directionalLight position={[10, 10, 5]} intensity={1.5} />
-            <directionalLight position={[-10, 5, -5]} intensity={0.5} />
-            <spotLight position={[0, 10, 0]} intensity={1} angle={0.3} penumbra={1} />
-            <CurrentCarModel scale={0.085} position={[0, -1, 0]} rotation={[0, Math.PI / 4, 0]} />
+            <ambientLight intensity={0.3} />
+
+            {/* Main stage lights from top - dramatic lighting */}
+            <pointLight position={[0, 8, 0]} intensity={2} color="#ffffff" distance={15} decay={2} />
+            <pointLight position={[3, 10, 3]} intensity={1.5} color="#00d9ff" distance={12} decay={2} />
+            <pointLight position={[-3, 10, -3]} intensity={1.5} color="#ff00ff" distance={12} decay={2} />
+            <pointLight position={[4, 7, -2]} intensity={1.2} color="#ffaa00" distance={10} decay={2} />
+            <pointLight position={[-4, 7, 2]} intensity={1.2} color="#00ffaa" distance={10} decay={2} />
+
+            {/* Rim lights for dramatic effect */}
+            <spotLight position={[0, 12, 0]} intensity={2} angle={0.4} penumbra={0.5} color="#ffffff" />
+            <spotLight position={[5, 8, 5]} intensity={1.5} angle={0.3} penumbra={0.8} color="#00d9ff" />
+            <spotLight position={[-5, 8, -5]} intensity={1.5} angle={0.3} penumbra={0.8} color="#ff6600" />
+
+            {/* Fill lights */}
+            <directionalLight position={[10, 10, 5]} intensity={0.8} color="#ffffff" />
+            <directionalLight position={[-10, 5, -5]} intensity={0.5} color="#4488ff" />
+
+            <CurrentCarModel scale={currentCar.id === 'car2' ? 0.085 : 0.825} position={[0, -1, 0]} rotation={[0, Math.PI / 4, 0]} />
             <OrbitControls
               enableZoom={false}
               enablePan={false}

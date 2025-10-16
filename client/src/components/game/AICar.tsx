@@ -180,22 +180,23 @@ export const AICar = ({ carId, startPosition, color = '#ff0000', CarModel, drive
 
   return (
     <group ref={carRef} position={[startPosition.x, startPosition.y, startPosition.z]} rotation={[0, initialRotation, 0]}>
-      <CarModel scale={0.8} />
+      <CarModel scale={3.5} />
       {/* Driver name text above car - always faces camera */}
       <Text
-        position={[0, 2.22, 0]}
-        fontSize={0.35}
+        position={[0, 8, 0]}
+        fontSize={1.0}
         color={color}
         anchorX="center"
         anchorY="middle"
-        outlineWidth={0.022}
+        outlineWidth={0.05}
         outlineColor="#000000"
         fillOpacity={1}
         outlineOpacity={1}
       >
         {driverName}
       </Text>
-      <pointLight position={[0, 1.1, 0]} intensity={1.0} distance={35} color={color} />
+      {/* @ts-ignore */}
+      <pointLight position={[0, 5, 0]} intensity={1.5} distance={50} color={color} />
     </group>
   );
 };
