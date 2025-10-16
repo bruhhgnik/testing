@@ -17,6 +17,7 @@ import useAppStore from '../../zustand/store';
 import { AICar } from './AICar';
 import { FinishLine } from './FinishLine';
 import { updateCarPhysics, CAR_PHYSICS } from './carPhysics';
+// import { BitcoinCoin } from './BitcoinCoin';
 
 // Car controls component
 export const CarController = () => {
@@ -295,6 +296,11 @@ export const CarController = () => {
 
 // Main racing game scene
 export const RacingGame = () => {
+  // const { coins } = useAppStore();
+  // const { position: playerPosition, raceStarted, spawnCoins, coins } = useAppStore();
+  // const lastSpawnTimeRef = useRef(0);
+  // const coinCounterRef = useRef(0);
+
   // Stable AI car configurations (names don't change) - positioned at track location
   const aiCarPositions = useMemo(() => [
     { id: 'ai-1', x: 1188.6, y: 1.3, z: 1502.4, color: '#ff0000', model: Car3Model, name: 'Max Thunder' },
@@ -304,6 +310,50 @@ export const RacingGame = () => {
     { id: 'ai-5', x: 1172.2, y: 1.3, z: 1495.3, color: '#ff00ff', model: Car3Model, name: 'Nitro Nova' },
     { id: 'ai-6', x: 1183.9, y: 1.3, z: 1495.3, color: '#00ffff', model: Car4Model, name: 'Storm Racer' },
   ], []); // Empty dependency array means this only runs once
+
+  // Coin spawning system - DISABLED FOR NOW
+  // useEffect(() => {
+  //   if (!raceStarted) return;
+
+  //   const spawnInterval = setInterval(() => {
+  //     const now = Date.now();
+  //     const timeSinceLastSpawn = now - lastSpawnTimeRef.current;
+  //     const randomDelay = 20000 + Math.random() * 10000; // 20-30 seconds
+
+  //     if (timeSinceLastSpawn >= randomDelay || lastSpawnTimeRef.current === 0) {
+  //       lastSpawnTimeRef.current = now;
+
+  //       // Spawn 2-3 coins
+  //       const numCoins = Math.floor(Math.random() * 2) + 2; // 2 or 3
+  //       const newCoins = [];
+
+  //       for (let i = 0; i < numCoins; i++) {
+  //         coinCounterRef.current++;
+
+  //         // Spawn coins 5 units ahead of player's Z position
+  //         const spawnZ = playerPosition.z - 5;
+
+  //         // Spread coins across the track (X position varies)
+  //         const centerX = 1194.1; // Track center
+  //         const offsetX = (Math.random() - 0.5) * 10; // Random offset within track width
+
+  //         newCoins.push({
+  //           id: `coin-${coinCounterRef.current}`,
+  //           position: {
+  //             x: centerX + offsetX,
+  //             y: 3, // Height above ground
+  //             z: spawnZ,
+  //           },
+  //         });
+  //       }
+
+  //       console.log(`💰 Spawning ${numCoins} coins ahead of player at Z: ${playerPosition.z - 5}`);
+  //       spawnCoins(newCoins);
+  //     }
+  //   }, 1000); // Check every second
+
+  //   return () => clearInterval(spawnInterval);
+  // }, [raceStarted, playerPosition.z, spawnCoins]);
 
   return (
     <>
@@ -344,6 +394,16 @@ export const RacingGame = () => {
           driverName={pos.name}
         />
       ))}
+
+      {/* Bitcoin coins - DISABLED FOR NOW */}
+      {/* {coins.map((coin) => (
+        <BitcoinCoin
+          key={coin.id}
+          coinId={coin.id}
+          position={[coin.position.x, coin.position.y, coin.position.z]}
+          collected={coin.collected}
+        />
+      ))} */}
     </>
   );
 };

@@ -8,6 +8,7 @@ import { RacingHUD } from "../components/ui/RacingHUD";
 import { CountdownOverlay } from "../components/ui/CountdownOverlay";
 import { Leaderboard } from "../components/ui/Leaderboard";
 import { CarSelectionScreen } from "../components/ui/CarSelectionScreen";
+import { TxnsProgressBar } from "../components/ui/TxnsProgressBar";
 
 const App = () => {
   const { gameStarted, carSelectionComplete } = useAppStore();
@@ -36,6 +37,9 @@ const App = () => {
 
       {/* Leaderboard */}
       {gameStarted && carSelectionComplete && <Leaderboard />}
+
+      {/* Txns Progress Bar */}
+      {gameStarted && carSelectionComplete && <TxnsProgressBar />}
 
       {/* 3D Canvas - Racing Game */}
       {gameStarted && carSelectionComplete && (
