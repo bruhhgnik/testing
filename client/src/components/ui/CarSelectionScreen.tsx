@@ -281,11 +281,13 @@ export const CarSelectionScreen = () => {
               enablePan={false}
               minDistance={3}
               maxDistance={10}
-              minPolarAngle={Math.PI / 3}
-              maxPolarAngle={Math.PI / 2.5}
+              minPolarAngle={0}
+              maxPolarAngle={Math.PI}
               autoRotate
               autoRotateSpeed={2}
               zoomSpeed={0.5}
+              enableDamping={true}
+              dampingFactor={0.05}
             />
           </Canvas>
 
