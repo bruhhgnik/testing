@@ -32,7 +32,22 @@ export const CarController = () => {
     initializeRace,
     startRaceCountdown,
     updateCarPosition,
+    selectedCar,
   } = useAppStore();
+
+  // Get the selected car model component
+  const getCarModel = () => {
+    switch (selectedCar) {
+      case 'car2': return Car2Model;
+      case 'car3': return Car3Model;
+      case 'car4': return Car4Model;
+      case 'car5': return Car5Model;
+      case 'car6': return Car6Model;
+      default: return Car2Model;
+    }
+  };
+
+  const SelectedCarModel = getCarModel();
 
   const carRef = useRef<THREE.Group>(null);
   const velocityRef = useRef(new Vector3(0, 0, 0));
@@ -250,7 +265,7 @@ export const CarController = () => {
 
   return (
     <group ref={carRef} position={[position.x, position.y, position.z]} rotation={[0, rotation, 0]}>
-      <Car2Model scale={0.085} castShadow receiveShadow />
+      <SelectedCarModel scale={0.085} castShadow receiveShadow />
 
       {/* Front headlights - positioned at front of car */}
       <spotLight

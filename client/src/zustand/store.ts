@@ -85,6 +85,8 @@ interface AppState {
   countdownValue: number | null; // 3, 2, 1, 0 for GO, null when countdown done
   raceStarted: boolean;
   raceFinished: boolean;
+  selectedCar: string; // 'car2', 'car3', 'car4', 'car5', 'car6'
+  carSelectionComplete: boolean;
   carPositions: {
     id: string;
     name: string;
@@ -171,6 +173,8 @@ interface AppActions {
   startRaceCountdown: () => void;
   setRaceStarted: (started: boolean) => void;
   setRaceFinished: (finished: boolean) => void;
+  setSelectedCar: (carId: string) => void;
+  setCarSelectionComplete: (complete: boolean) => void;
   updateCarPosition: (carId: string, position: { x: number; y: number; z: number }, rotation: number, lapProgress: number) => void;
   setCarFinished: (carId: string, finishTime: number) => void;
   initializeRace: () => void;
@@ -322,6 +326,8 @@ const initialState: AppState = {
   countdownValue: 3,
   raceStarted: false,
   raceFinished: false,
+  selectedCar: 'car2',
+  carSelectionComplete: false,
   carPositions: [],
 };
 
@@ -682,6 +688,9 @@ const useAppStore = create<AppStore>()(
 
       setRaceStarted: (raceStarted) => set({ raceStarted }),
       setRaceFinished: (raceFinished) => set({ raceFinished }),
+
+      setSelectedCar: (selectedCar) => set({ selectedCar }),
+      setCarSelectionComplete: (carSelectionComplete) => set({ carSelectionComplete }),
 
       updateCarPosition: (carId, position, rotation, lapProgress) =>
         set((state) => {
