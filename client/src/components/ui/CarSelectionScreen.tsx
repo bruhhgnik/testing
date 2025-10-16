@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { Model as Car2Model } from '../../models/Car2';
@@ -7,6 +7,29 @@ import { Model as Car4Model } from '../../models/Car4';
 import { Model as Car5Model } from '../../models/Car5';
 import { Model as Car6Model } from '../../models/Car6';
 import useAppStore from '../../zustand/store';
+
+const abstractBackgrounds = [
+  {
+    gradient: 'radial-gradient(circle at 20% 30%, rgba(255, 100, 150, 0.6) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(100, 200, 255, 0.6) 0%, transparent 50%), radial-gradient(circle at 50% 50%, rgba(150, 100, 255, 0.4) 0%, transparent 70%), linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+    filter: 'blur(50px)',
+  },
+  {
+    gradient: 'radial-gradient(circle at 70% 20%, rgba(255, 150, 100, 0.7) 0%, transparent 50%), radial-gradient(circle at 30% 80%, rgba(100, 255, 200, 0.6) 0%, transparent 50%), radial-gradient(circle at 60% 60%, rgba(200, 100, 255, 0.5) 0%, transparent 70%), linear-gradient(135deg, #0f0f1e 0%, #1a1a3e 100%)',
+    filter: 'blur(50px)',
+  },
+  {
+    gradient: 'radial-gradient(circle at 40% 40%, rgba(100, 255, 255, 0.6) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 100, 200, 0.6) 0%, transparent 50%), radial-gradient(circle at 20% 80%, rgba(255, 200, 100, 0.5) 0%, transparent 70%), linear-gradient(135deg, #1e1a2e 0%, #2e1a3e 100%)',
+    filter: 'blur(50px)',
+  },
+  {
+    gradient: 'radial-gradient(circle at 60% 70%, rgba(200, 100, 255, 0.7) 0%, transparent 50%), radial-gradient(circle at 20% 30%, rgba(100, 255, 150, 0.6) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(255, 150, 100, 0.5) 0%, transparent 70%), linear-gradient(135deg, #1a1e2e 0%, #1e2a3e 100%)',
+    filter: 'blur(50px)',
+  },
+  {
+    gradient: 'radial-gradient(circle at 30% 60%, rgba(255, 200, 100, 0.6) 0%, transparent 50%), radial-gradient(circle at 70% 40%, rgba(100, 150, 255, 0.7) 0%, transparent 50%), radial-gradient(circle at 50% 80%, rgba(255, 100, 150, 0.5) 0%, transparent 70%), linear-gradient(135deg, #2e1a1e 0%, #1e1a3e 100%)',
+    filter: 'blur(50px)',
+  },
+];
 
 const carData = [
   { id: 'car2', name: 'McLaren W1', Model: Car2Model, stats: { topSpeed: 245, acceleration: 2.8, handling: 7.3, fuel: 5.1, nitro: 4.9 } },
@@ -35,10 +58,20 @@ const StatBar = ({ label, value, max = 10, color = '#00d9ff' }: { label: string;
 
 export const CarSelectionScreen = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [backgroundIndex, setBackgroundIndex] = useState(0);
   const { setSelectedCar, setCarSelectionComplete } = useAppStore();
 
   const currentCar = carData[selectedIndex];
   const CurrentCarModel = currentCar.Model;
+
+  // Cycle through abstract backgrounds every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBackgroundIndex((prev) => (prev + 1) % abstractBackgrounds.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handlePrevious = () => {
     setSelectedIndex((prev) => (prev - 1 + carData.length) % carData.length);
@@ -57,13 +90,54 @@ export const CarSelectionScreen = () => {
     <div style={{
       width: '100vw',
       height: '100vh',
-      background: 'linear-gradient(to bottom, #0a0a0a 0%, #1a1a1a 100%)',
+      position: 'relative',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      position: 'relative',
+      overflow: 'hidden',
     }}>
+      {/* Animated abstract backgrounds */}
+      {abstractBackgrounds.map((bg, index) => (
+        <div
+          key={index}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            background: bg.gradient,
+            filter: bg.filter,
+            opacity: index === backgroundIndex ? 1 : 0,
+            transition: 'opacity 2s ease-in-out',
+            zIndex: 0,
+          }}
+        />
+      ))}
+
+      {/* Dark overlay */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5))',
+        zIndex: 1,
+      }} />
+
+      {/* Content container */}
+      <div style={{
+        position: 'relative',
+        zIndex: 2,
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
       {/* Title */}
       <div style={{
         position: 'absolute',
@@ -133,23 +207,73 @@ export const CarSelectionScreen = () => {
           </button>
 
           <Canvas camera={{ position: [5, 2, 5], fov: 50 }}>
-            <ambientLight intensity={0.3} />
+            <ambientLight intensity={0.4} />
+            <fog attach="fog" args={['#2a2030', 10, 30]} />
 
-            {/* Main stage lights from top - dramatic lighting */}
-            <pointLight position={[0, 8, 0]} intensity={2} color="#ffffff" distance={15} decay={2} />
-            <pointLight position={[3, 10, 3]} intensity={1.5} color="#00d9ff" distance={12} decay={2} />
-            <pointLight position={[-3, 10, -3]} intensity={1.5} color="#ff00ff" distance={12} decay={2} />
-            <pointLight position={[4, 7, -2]} intensity={1.2} color="#ffaa00" distance={10} decay={2} />
-            <pointLight position={[-4, 7, 2]} intensity={1.2} color="#00ffaa" distance={10} decay={2} />
+            {/* Warm orange/yellow spotlight from left rear - pointing at car */}
+            <spotLight
+              position={[-8, 10, -8]}
+              target-position={[0, 0, 0]}
+              intensity={4}
+              angle={0.5}
+              penumbra={0.8}
+              color="#ff8800"
+              castShadow
+            />
+            <spotLight
+              position={[-6, 8, -6]}
+              target-position={[0, 0, 0]}
+              intensity={3}
+              angle={0.4}
+              penumbra={0.9}
+              color="#ffaa22"
+            />
 
-            {/* Rim lights for dramatic effect */}
-            <spotLight position={[0, 12, 0]} intensity={2} angle={0.4} penumbra={0.5} color="#ffffff" />
-            <spotLight position={[5, 8, 5]} intensity={1.5} angle={0.3} penumbra={0.8} color="#00d9ff" />
-            <spotLight position={[-5, 8, -5]} intensity={1.5} angle={0.3} penumbra={0.8} color="#ff6600" />
+            {/* Cool blue spotlights from right rear - pointing at car */}
+            <spotLight
+              position={[8, 10, -8]}
+              target-position={[0, 0, 0]}
+              intensity={3.5}
+              angle={0.5}
+              penumbra={0.8}
+              color="#0088ff"
+            />
+            <spotLight
+              position={[6, 9, -6]}
+              target-position={[0, 0, 0]}
+              intensity={2.5}
+              angle={0.4}
+              penumbra={0.9}
+              color="#00aaff"
+            />
 
-            {/* Fill lights */}
-            <directionalLight position={[10, 10, 5]} intensity={0.8} color="#ffffff" />
-            <directionalLight position={[-10, 5, -5]} intensity={0.5} color="#4488ff" />
+            {/* Center back spotlight - pointing at car */}
+            <spotLight
+              position={[0, 12, -10]}
+              target-position={[0, 0, 0]}
+              intensity={2}
+              angle={0.5}
+              penumbra={0.7}
+              color="#ffffff"
+            />
+
+            {/* Background fill lights to illuminate the scene */}
+            <pointLight position={[0, 8, -12]} intensity={4} color="#ff7733" distance={30} decay={1} />
+            <pointLight position={[-8, 6, -10]} intensity={3.5} color="#ff9944" distance={25} decay={1} />
+            <pointLight position={[8, 6, -10]} intensity={3.5} color="#4499ff" distance={25} decay={1} />
+            <pointLight position={[-10, 8, -12]} intensity={3} color="#ff8844" distance={28} decay={1} />
+            <pointLight position={[10, 8, -12]} intensity={3} color="#2288ff" distance={28} decay={1} />
+
+            {/* Additional atmospheric lights for depth */}
+            <pointLight position={[0, 10, -15]} intensity={2.5} color="#ffaa66" distance={35} decay={1.2} />
+            <pointLight position={[-12, 5, -8]} intensity={2} color="#ff6633" distance={20} decay={1.2} />
+            <pointLight position={[12, 5, -8]} intensity={2} color="#3388ff" distance={20} decay={1.2} />
+
+            {/* Floor/ground lights */}
+            <pointLight position={[0, 0.5, 0]} intensity={1.5} color="#ffffff" distance={12} decay={2} />
+            <pointLight position={[-3, 0.5, -3]} intensity={1.2} color="#ff6633" distance={10} decay={2} />
+            <pointLight position={[3, 0.5, -3]} intensity={1.2} color="#3388ff" distance={10} decay={2} />
+            <pointLight position={[0, 0.2, -5]} intensity={1} color="#ff9944" distance={12} decay={2} />
 
             <CurrentCarModel scale={currentCar.id === 'car2' ? 0.085 : 0.825} position={[0, -1, 0]} rotation={[0, Math.PI / 4, 0]} />
             <OrbitControls
@@ -279,6 +403,7 @@ export const CarSelectionScreen = () => {
         >
           <span style={{ fontSize: '24px' }}>✓</span> SELECT
         </button>
+      </div>
       </div>
     </div>
   );
